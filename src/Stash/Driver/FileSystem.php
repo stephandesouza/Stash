@@ -67,7 +67,7 @@ class FileSystem extends AbstractDriver
     protected $cachePath;
 
     /**
-     * Permissions to use for new files.
+     * Permissions to use for new files. Define as false to ignore permission changes.
      *
      * @var
      */
@@ -223,8 +223,10 @@ class FileSystem extends AbstractDriver
                 }
             }
 
-            if (!(touch($path) && chmod($path, $this->filePermissions))) {
-                return false;
+            if (!touch($path)) {
+                if($this->filePermissions !== false && !chmod($path, $this->filePermissions)) {
+                    return false;
+                }
             }
         }
 
